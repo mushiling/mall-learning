@@ -2,6 +2,7 @@ package com.msl.mall.tiny.service;
 
 import com.msl.mall.tiny.mbg.model.UmsAdmin;
 import com.msl.mall.tiny.mbg.model.UmsPermission;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
 
@@ -27,8 +28,11 @@ public interface UmsAdminService {
      */
     String login(String username, String password);
 
+
     /**
      * 获取用户所有权限（包括角色权限和+-权限）
      */
     List<UmsPermission> getPermissionList(Long adminId);
+
+
 }

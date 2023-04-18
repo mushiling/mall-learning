@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.msl.mall.tiny.common.utils.JwtTokenUtil;
 import com.msl.mall.tiny.dao.UmsAdminRoleRelationDao;
 import com.msl.mall.tiny.mbg.mapper.UmsAdminMapper;
+import com.msl.mall.tiny.mbg.mapper.UmsPermissionMapper;
 import com.msl.mall.tiny.mbg.model.UmsAdmin;
 import com.msl.mall.tiny.mbg.model.UmsAdminExample;
 import com.msl.mall.tiny.mbg.model.UmsPermission;
@@ -36,7 +37,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     @Autowired
     private UmsAdminMapper adminMapper;
     @Autowired
-    private UmsAdminRoleRelationDao adminRoleRelationDao;
+    private UmsPermissionMapper umsPermissionMapper;
+
     @Override
     public UmsAdmin getAdminByUserName(String userName) {
         UmsAdminExample example = new UmsAdminExample();
@@ -87,6 +89,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
 
     @Override
     public List<UmsPermission> getPermissionList(Long adminId) {
-        return adminRoleRelationDao.getPermissionList(adminId);
+        return umsPermissionMapper.getPermissionList(adminId);
     }
+
+
 }

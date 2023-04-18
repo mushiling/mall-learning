@@ -11,6 +11,7 @@ import com.msl.mall.tiny.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -41,6 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     //当未登录或token失效时，返回JSON格式的结果；
     RestAuthenticationEntryPoint restAuthenticationEntryPoint;
     @Autowired
+    @Lazy
     private UmsAdminService adminService;
 
     /**
@@ -66,9 +68,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-resources/**",
                         "/v2/api-docs/**")
                 .permitAll()
-                .antMatchers("/admin/login","/admin/register")//对登录注册要允许匿名访问
+                .antMatchers("/search/simple","/admin/login","/admin/register","/sso/getAuthCode","/sso/verifyAuthCode")//对登录注册要允许匿名访问
                 .permitAll()
                 .antMatchers(HttpMethod.OPTIONS)//跨域请求会先进行一次options请求
+                .permitAll()
+                .antMatchers("/**")//测试时全部运行访问
                 .permitAll()
                 .anyRequest()//除了以上请求全部需要鉴权认证
                 .authenticated();
@@ -100,11 +104,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public UserDetailsService userDetailsService(){
         //获取登录用户信息
-        return username->{
+        //获取登录用户信息
+        return username -> {
             UmsAdmin admin = adminService.getAdminByUserName(username);
-            if(admin!=null){
+            if (admin != null) {
                 List<UmsPermission> permissionList = adminService.getPermissionList(admin.getId());
-                //SpringSecurity定义用于封装用户信息的类（主要是用户信息和权限），需要自行实现；
                 return new AdminUserDetails(admin,permissionList);
             }
             throw new UsernameNotFoundException("用户名或密码错误");
@@ -129,9 +133,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter() {
         return new JwtAuthenticationTokenFilter();
     }
+
     @Bean
     @Override
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }

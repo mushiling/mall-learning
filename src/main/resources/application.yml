@@ -1,19 +1,26 @@
 server:
   port: 8080
-
 spring:
+  main:
+    allow-circular-references: true
   datasource:
     url: jdbc:mysql://192.168.10.130:3306/mall?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
     password: root
   redis:
     host: 192.168.10.130
-    password: 000415
+    password: "000415"
     port: 6379
     timeout: 3000
-
-
-
+  profiles:
+    #    active: release
+    active: dev
+  data:
+    elasticsearch:
+      repositories:
+        enabled: true
+  elasticsearch:
+    uris: 192.168.10.130:9200
 mybatis:
   mapper-locations:
     - classpath:mapper/*.xml
@@ -33,3 +40,7 @@ jwt:
   secret: mySecret #JWT加解密使用的密钥
   expiration: 604800 #JWT的超期限时间(60*60*24)
   tokenHead: Bearer  #JWT负载中拿到开头
+management:
+  endpoint:
+    health:
+      show-details: always

@@ -27,4 +27,6 @@ public interface UmsPermissionMapper {
     int updateByPrimaryKeySelective(UmsPermission record);
 
     int updateByPrimaryKey(UmsPermission record);
+
+    List<UmsPermission> getPermissionList(@Param("adminId") Long adminId);
 }
