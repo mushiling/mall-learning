@@ -1,6 +1,10 @@
 server:
   port: 8080
 spring:
+  servlet:
+    multipart:
+      enabled: true #开启文件上传
+      max-file-size: 10MB #限制文件上传大小为10M
   main:
     allow-circular-references: true
   datasource:
@@ -19,8 +23,20 @@ spring:
     elasticsearch:
       repositories:
         enabled: true
+    mongodb:
+      host: 192.168.10.130 # mongodb的连接地址
+      port: 27017 # mongodb的连接端口号
+      database: mall-port # mongodb的连接的数据库
   elasticsearch:
     uris: 192.168.10.130:9200
+  rabbitmq:
+    host: 192.168.10.130 # rabbitmq的连接地址
+    port: 5672 # rabbitmq的连接端口号
+    virtual-host: /mall # rabbitmq的虚拟host
+    username: mall # rabbitmq的用户名
+    password: msl123 # rabbitmq的密码
+    publisher-confirm-type: correlated #如果对异步消息需要回调必须设置为true
+
 mybatis:
   mapper-locations:
     - classpath:mapper/*.xml
@@ -44,3 +60,9 @@ management:
   endpoint:
     health:
       show-details: always
+# MinIO对象存储相关配置
+minio:
+  endpoint: http://192.168.10.130:9090 #MinIO服务所在地址
+  bucketName: mall #存储桶名称
+  accessKey: minioadmin #访问的key
+  secretKey: minioadmin #访问的秘钥
